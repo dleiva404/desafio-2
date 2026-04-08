@@ -25,3 +25,40 @@ function Transaccion(descripcion, monto) {
     return dia + "/" + mes + "/" + anio;
   })();
 }
+Transaccion.prototype.toString = function () {
+  return (
+    "[" +
+    this.tipo.toUpperCase() +
+    "] " +
+    this.descripcion +
+    ": $" +
+    this.monto.toFixed(2) +
+    " (" +
+    this.fecha +
+    ")"
+  );
+};
+
+// ── SUBCLASE: Ingreso ────────────────────────────────────────
+
+function Ingreso(descripcion, monto) {
+  Transaccion.call(this, descripcion, monto);
+  this.tipo = "ingreso";
+}
+
+Ingreso.prototype = Object.create(Transaccion.prototype);
+Ingreso.prototype.constructor = Ingreso;
+
+// ── SUBCLASE: Egreso ─────────────────────────────────────────
+
+function Egreso(descripcion, monto) {
+  Transaccion.call(this, descripcion, monto);
+  this.tipo = "egreso";
+}
+
+Egreso.prototype = Object.create(Transaccion.prototype);
+Egreso.prototype.constructor = Egreso;
+
+// ── ARRAY GLOBAL DE TRANSACCIONES ───────────────────────────
+
+var transacciones = [];
