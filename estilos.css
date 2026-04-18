@@ -2,7 +2,6 @@
 /* --- Estilos --- */
 
 :root {
-    /* ---Paleta de colores--*/
     --primary-bg: #f8fafc;
     --header-gradient: linear-gradient(135deg, #334e68 0%, #243b53 100%);
     --ingreso-color: #27ae60;
@@ -13,7 +12,7 @@
     --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-/* ---Reset y base--- */
+/* --- Reset --- */
 * {
     margin: 0;
     padding: 0;
@@ -25,7 +24,7 @@ body {
     font-family: 'Segoe UI', system-ui, sans-serif;
     color: var(--text-main);
 }
-/* ---Evitamos que la app se estire demasiado en pantallas grandes--- */
+
 .contenedor-principal {
     max-width: 900px;
     margin: 40px auto;
@@ -41,75 +40,11 @@ body {
     border-radius: 24px;
     box-shadow: var(--shadow-md);
     margin-bottom: -40px;
-    position: relative;
-    z-index: 1;
-}
-
-.titulo-principal {
-    font-weight: 300;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 15px;
-    opacity: 0.8;
 }
 
 .monto-total {
     font-size: 4.5rem;
     font-weight: 700;
-    margin-bottom: 35px;
-    letter-spacing: -2px;
-}
-
-/* ---Contenedores de los ingresos y egresos--- */
-.resumen-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.cuadro-resumen {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 15px 25px;
-    border-radius: 16px;
-    min-width: 220px; 
-    display: flex;
-    flex-direction: row; 
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: transform 0.3s;
-}
-
-.cuadro-resumen:hover { transform: translateY(-3px); }
-
-.cuadro-ingresos { border-bottom: 3px solid var(--ingreso-color); }
-.cuadro-egresos { border-bottom: 3px solid var(--egreso-color); }
-
-.etiqueta {
-    font-size: 0.75rem;
-    font-weight: 700;
-    opacity: 0.9;
-}
-
-.monto-resumen {
-    font-size: 1.3rem;
-    font-weight: 600;
-}
-
-.egreso-detalle {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.porcentaje-badge {
-    background-color: rgba(0, 0, 0, 0.3);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.7rem;
 }
 
 /* --- Formulario --- */
@@ -118,9 +53,6 @@ body {
     padding: 25px;
     border-radius: 20px;
     box-shadow: var(--shadow-md);
-    margin-bottom: 30px;
-    position: relative;
-    z-index: 2;
 }
 
 .fila-formulario {
@@ -130,124 +62,24 @@ body {
 
 .input-estilo {
     background-color: #f1f5f8;
-    border: 2px solid transparent;
     padding: 14px;
     border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.3s;
     width: 100%;
-}
-
-.input-estilo:focus {
-    background-color: var(--white);
-    border-color: #334e68;
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(51, 78, 104, 0.1);
 }
 
 .btn-check {
     background-color: #334e68;
-    color: var(--white);
-    border: none;
-    border-radius: 12px;
+    color: white;
     padding: 14px 30px;
-    font-weight: 700;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.2s;
-}
-
-.btn-check:hover { background-color: #243b53; }
-.btn-check:active { transform: scale(0.95); }
-
-/* --- Pestañas y Listas --- */
-.seccion-detalles {
-    background: var(--white);
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    overflow: hidden;
-}
-
-input[name="tab-control"] { display: none; }
-
-.tab-header {
-    display: flex;
-    padding: 10px;
-    background: #f8fafc;
-    border-bottom: 1px solid #f1f5f8;
-}
-
-.tab-label {
-    flex: 1;
-    padding: 15px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: 700;
-    color: var(--text-light);
     border-radius: 12px;
-    transition: 0.3s;
+    cursor: pointer;
 }
 
-/* ---Estilos dinamicos al seleccionar una pestaña--- */
-#tab1-radio:checked ~ .tab-header .label-ingreso {
-    background: var(--white);
-    color: var(--ingreso-color);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-#tab2-radio:checked ~ .tab-header .label-egreso {
-    background: var(--white);
-    color: var(--egreso-color);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.content-pane {
-    display: none;
-    padding: 30px;
-    animation: fadeIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-#tab1-radio:checked ~ .tab-content #contenido-ingresos,
-#tab2-radio:checked ~ .tab-content #contenido-egresos {
-    display: block;
-}
-
-.item-vacio {
-    text-align: center;
-    color: var(--text-light);
-    font-style: italic;
-    list-style: none;
-    margin-top: 20px;
-}
-
-/* Estilo para items reales */
+/* --- Listas --- */
 .item-real {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     padding: 15px;
-    border-bottom: 1px solid #f1f5f8;
-    transition: background 0.2s;
-    gap: 16px;
-}
-
-.item-real:hover { background-color: #fbfcfe; }
-
-.item-descripcion {
-    color: var(--text-main);
-}
-
-.item-detalle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    white-space: nowrap;
 }
 
 .item-ingreso .item-monto {
@@ -258,19 +90,9 @@ input[name="tab-control"] { display: none; }
     color: var(--egreso-color);
 }
 
-/* --- Extras de accesibilidad y responsive --- */
-
-/* Asegura que el selector muestre que es cliqueable */
-select.input-estilo {
-    cursor: pointer;
-}
-
-/* Ajuste para móviles  */
+/* --- Responsive --- */
 @media (max-width: 600px) {
     .fila-formulario {
-        flex-direction: column; /* Apila los campos uno sobre otro */
-    }
-    .monto-total {
-        font-size: 3rem; /* Reduce el tamaño del número grande */
+        flex-direction: column;
     }
 }

@@ -42,6 +42,7 @@ function inicializarTabs() {
       tab.label.setAttribute("role", "tab");
       tab.pane.setAttribute("role", "tabpanel");
 
+      // Permite cambiar de panel tanto por clic como por cambio del radio.
       tab.label.addEventListener("click", function () {
         activarTab(tab.radio.id, configuracionTabs);
       });
