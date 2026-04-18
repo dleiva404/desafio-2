@@ -1,3 +1,130 @@
+// ── UTILIDADES DE FECHA ──────────────────────────────────────
+
+function obtenerFechaActual() {
+  var hoy = new Date();
+  var dia = String(hoy.getDate()).padStart(2, "0");
+  var mes = String(hoy.getMonth() + 1).padStart(2, "0");
+  var anio = hoy.getFullYear();
+
+  return dia + "/" + mes + "/" + anio;
+}
+
+// ACTUALIZACIÓN DEL DOM 
+
+function formatearMonto(monto) {
+  return Number(monto).toFixed(2);
+}
+
+function crearItemTransaccion(transaccion) {
+  // Construye cada fila de la lista según el tipo de transacción.
+  var elemento = document.createElement("li");
+  elemento.className = "item-real item-" + transaccion.tipo;
+
+  var descripcion = document.createElement("span");
+  descripcion.className = "item-descripcion";
+  descripcion.textContent =
+    transaccion.descripcion + " (" + transaccion.fecha + ")";
+
+  var detalle = document.createElement("div");
+  detalle.className = "item-detalle";
+
+  var monto = document.createElement("span");
+  monto.className = "item-monto";
+
+  if (transaccion instanceof Ingreso) {
+    monto.textContent = "+ " + formatearMonto(transaccion.monto);
+    detalle.appendChild(monto);
+  } else {
+    // Los egresos muestran además su porcentaje respecto al total de ingresos.
+    var porcentaje = document.createElement("span");
+    porcentaje.className = "porcentaje-badge";
+    porcentaje.textContent =
+      calcularPorcentajeEgresoIndividual(transaccion).toFixed(2) + "%";
+
+    monto.textContent = "- " + formatearMonto(transaccion.monto);
+    detalle.appendChild(monto);
+    detalle.appendChild(porcentaje);
+  }
+
+  elemento.appendChild(descripcion);
+  elemento.appendChild(detalle);
+  return elemento;
+}
+
+function renderizarListaTransacciones(idLista, tipo, mensajeVacio) {
+  // Reemplaza el contenido de la lista con los datos actuales del arreglo global.
+  var lista = document.getElementById(idLista);
+  if (!lista) {
+    return;
+  }
+
+  lista.innerHTML = "";
+
+  var items = [];
+  for (var i = 0; i < transacciones.length; i++) {
+    if (transacciones[i].tipo === tipo) {
+      items.push(transacciones[i]);
+    }
+  }
+
+  if (items.length === 0) {
+    var itemVacio = document.createElement("li");
+    itemVacio.className = "item-vacio";
+    itemVacio.textContent = mensajeVacio;
+    lista.appendChild(itemVacio);
+    return;
+  }
+
+  for (var j = 0; j < items.length; j++) {
+    lista.appendChild(crearItemTransaccion(items[j]));
+  }
+}
+
+function actualizarElementosDOM() {
+  // Sincroniza encabezado, tarjetas resumen y listas con el estado actual.
+  var titulo = document.getElementById("titulo-presupuesto");
+  var montoDisponible = document.getElementById("monto-disponible");
+  var totalIngresos = document.getElementById("total-ingresos");
+  var totalEgresos = document.getElementById("total-egresos");
+  var porcentajeTotal = document.getElementById("porcentaje-total");
+
+  var presupuesto = calcularPresupuesto();
+  var ingresos = calcularTotalIngresos();
+  var egresos = calcularTotalEgresos();
+  var porcentaje = calcularPorcentajeGastoGeneral();
+
+  if (titulo) {
+    titulo.textContent = obtenerMesAnio();
+  }
+
+  if (montoDisponible) {
+    montoDisponible.textContent = "$ " + formatearMonto(presupuesto);
+  }
+
+  if (totalIngresos) {
+    totalIngresos.textContent = "+ " + formatearMonto(ingresos);
+  }
+
+  if (totalEgresos) {
+    totalEgresos.textContent = "- " + formatearMonto(egresos);
+  }
+
+  if (porcentajeTotal) {
+    porcentajeTotal.textContent = porcentaje.toFixed(2) + "%";
+  }
+
+  renderizarListaTransacciones(
+    "lista-ingresos",
+    "ingreso",
+    "No hay registros de ingresos...",
+  );
+  renderizarListaTransacciones(
+    "lista-egresos",
+    "egreso",
+    "No hay registros de egresos...",
+  );
+}
+
 // ── CLASE BASE: Transaccion ──────────────────────────────────
 
 function Transaccion(descripcion, monto) {
@@ -17,13 +144,7 @@ function Transaccion(descripcion, monto) {
   this.monto = montoNum;
   this.tipo = "transaccion";
 
-  this.fecha = (function () {
-    var hoy = new Date();
-    var dia = String(hoy.getDate()).padStart(2, "0");
-    var mes = String(hoy.getMonth() + 1).padStart(2, "0");
-    var anio = hoy.getFullYear();
-    return dia + "/" + mes + "/" + anio;
-  })();
+  this.fecha = obtenerFechaActual();
 }
 Transaccion.prototype.toString = function () {
   return (

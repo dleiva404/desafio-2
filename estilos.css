@@ -229,12 +229,34 @@ input[name="tab-control"] { display: none; }
 .item-real {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 15px;
     border-bottom: 1px solid #f1f5f8;
     transition: background 0.2s;
+    gap: 16px;
 }
 
 .item-real:hover { background-color: #fbfcfe; }
+
+.item-descripcion {
+    color: var(--text-main);
+}
+
+.item-detalle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.item-ingreso .item-monto {
+    color: var(--ingreso-color);
+}
+
+.item-egreso .item-monto {
+    color: var(--egreso-color);
+}
 
 /* --- Extras de accesibilidad y responsive --- */
 
