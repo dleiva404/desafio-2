@@ -58,28 +58,140 @@ body {
 .fila-formulario {
     display: flex;
     gap: 15px;
+    align-items: stretch;
+}
+
+.col-select {
+    flex: 0 0 90px;
+}
+
+.col-desc {
+    flex: 1 1 320px;
+}
+
+.col-monto {
+    flex: 0 1 180px;
+}
+
+.col-btn {
+    flex: 0 0 auto;
 }
 
 .input-estilo {
     background-color: #f1f5f8;
     padding: 14px;
+    border: 1px solid #d9e2ec;
     border-radius: 12px;
     width: 100%;
+    font: inherit;
+    color: var(--text-main);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.input-estilo:focus {
+    outline: none;
+    border-color: #486581;
+    box-shadow: 0 0 0 3px rgba(72, 101, 129, 0.18);
+    background-color: var(--white);
 }
 
 .btn-check {
     background-color: #334e68;
     color: white;
     padding: 14px 30px;
+    border: none;
     border-radius: 12px;
     cursor: pointer;
+    min-height: 100%;
+    font: inherit;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 10px 20px rgba(51, 78, 104, 0.18);
+}
+
+.btn-check:hover {
+    background-color: #243b53;
+    transform: translateY(-1px);
+}
+
+.btn-check:focus-visible {
+    outline: 3px solid rgba(72, 101, 129, 0.3);
+    outline-offset: 2px;
+}
+
+.tab-system input[type="radio"] {
+    display: none;
+}
+
+.tab-header {
+    display: flex;
+    gap: 12px;
+    margin: 28px 0 18px;
+}
+
+.tab-label {
+    flex: 1 1 0;
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1px solid #d9e2ec;
+    background-color: var(--white);
+    color: var(--text-light);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#tab1-radio:checked ~ .tab-header label[for="tab1-radio"] {
+    background-color: rgba(39, 174, 96, 0.12);
+    border-color: rgba(39, 174, 96, 0.35);
+    color: var(--ingreso-color);
+    box-shadow: 0 10px 18px rgba(39, 174, 96, 0.12);
+}
+
+#tab2-radio:checked ~ .tab-header label[for="tab2-radio"] {
+    background-color: rgba(231, 76, 60, 0.12);
+    border-color: rgba(231, 76, 60, 0.35);
+    color: var(--egreso-color);
+    box-shadow: 0 10px 18px rgba(231, 76, 60, 0.12);
+}
+
+.tab-content {
+    background-color: var(--white);
+    border-radius: 18px;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.content-pane {
+    padding: 10px 0;
 }
 
 /* --- Listas --- */
+.lista-items {
+    list-style: none;
+}
+
 .item-real {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 15px;
+    border-bottom: 1px solid #eef2f6;
+}
+
+.item-detalle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.item-vacio {
+    padding: 24px 15px;
+    color: var(--text-light);
 }
 
 .item-ingreso .item-monto {
@@ -93,6 +205,17 @@ body {
 /* --- Responsive --- */
 @media (max-width: 600px) {
     .fila-formulario {
+        flex-direction: column;
+    }
+
+    .col-select,
+    .col-desc,
+    .col-monto,
+    .col-btn {
+        flex: 1 1 auto;
+    }
+
+    .tab-header {
         flex-direction: column;
     }
 }
