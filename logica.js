@@ -1,4 +1,4 @@
-// ── UTILIDADES DE FECHA ──────────────────────────────────────
+// UTILIDADES DE FECHA
 
 function obtenerFechaActual() {
   var hoy = new Date();
@@ -9,14 +9,15 @@ function obtenerFechaActual() {
   return dia + "/" + mes + "/" + anio;
 }
 
-// ACTUALIZACIÓN DEL DOM 
+// ACTUALIZACION DEL DOM
 
 function formatearMonto(monto) {
   return Number(monto).toFixed(2);
 }
 
+// Esta funcion genera cada fila visual de ingresos o egresos en las listas.
 function crearItemTransaccion(transaccion) {
-  // Construye cada fila de la lista según el tipo de transacción.
+  // Construye cada fila de la lista segun el tipo de transaccion.
   var elemento = document.createElement("li");
   elemento.className = "item-real item-" + transaccion.tipo;
 
@@ -35,7 +36,7 @@ function crearItemTransaccion(transaccion) {
     monto.textContent = "+ " + formatearMonto(transaccion.monto);
     detalle.appendChild(monto);
   } else {
-    // Los egresos muestran además su porcentaje respecto al total de ingresos.
+    // En egresos tambien se muestra el porcentaje individual respecto al total de ingresos.
     var porcentaje = document.createElement("span");
     porcentaje.className = "porcentaje-badge";
     porcentaje.textContent =
@@ -51,8 +52,8 @@ function crearItemTransaccion(transaccion) {
   return elemento;
 }
 
+// Esta funcion reconstruye la lista visible a partir del arreglo global transacciones.
 function renderizarListaTransacciones(idLista, tipo, mensajeVacio) {
-  // Reemplaza el contenido de la lista con los datos actuales del arreglo global.
   var lista = document.getElementById(idLista);
   if (!lista) {
     return;
@@ -80,8 +81,8 @@ function renderizarListaTransacciones(idLista, tipo, mensajeVacio) {
   }
 }
 
+// Esta funcion sincroniza el estado logico con los elementos visibles del DOM.
 function actualizarElementosDOM() {
-  // Sincroniza encabezado, tarjetas resumen y listas con el estado actual.
   var titulo = document.getElementById("titulo-presupuesto");
   var montoDisponible = document.getElementById("monto-disponible");
   var totalIngresos = document.getElementById("total-ingresos");
@@ -116,36 +117,42 @@ function actualizarElementosDOM() {
   renderizarListaTransacciones(
     "lista-ingresos",
     "ingreso",
-    "No hay registros de ingresos...",
+    "No hay registros de ingresos..."
   );
   renderizarListaTransacciones(
     "lista-egresos",
     "egreso",
-    "No hay registros de egresos...",
+    "No hay registros de egresos..."
   );
 }
 
-// ── CLASE BASE: Transaccion ──────────────────────────────────
+// CLASE BASE: TRANSACCION
 
+// Modelo base de la aplicacion: define descripcion, monto, tipo y fecha.
 function Transaccion(descripcion, monto) {
+  // Validacion para asegurar que la descripcion no venga vacia.
   if (typeof descripcion !== "string" || descripcion.trim() === "") {
-    throw new Error("La descripción no puede estar vacía.");
+    throw new Error("La descripcion no puede estar vacia.");
   }
 
+  // Validacion para asegurar que el monto sea numerico.
   var montoNum = parseFloat(monto);
   if (isNaN(montoNum)) {
-    throw new Error("El monto ingresado no es un número válido.");
+    throw new Error("El monto ingresado no es un numero valido.");
   }
+
+  // Validacion para asegurar que el monto sea mayor que cero.
   if (montoNum <= 0) {
     throw new Error("El monto debe ser mayor que cero.");
   }
 
+  // Atributos comunes que comparten ingresos y egresos.
   this.descripcion = descripcion.trim();
   this.monto = montoNum;
   this.tipo = "transaccion";
-
   this.fecha = obtenerFechaActual();
 }
+
 Transaccion.prototype.toString = function () {
   return (
     "[" +
@@ -160,8 +167,9 @@ Transaccion.prototype.toString = function () {
   );
 };
 
-// ── SUBCLASE: Ingreso ────────────────────────────────────────
+// SUBCLASE: INGRESO
 
+// Especializacion de Transaccion para representar ingresos.
 function Ingreso(descripcion, monto) {
   Transaccion.call(this, descripcion, monto);
   this.tipo = "ingreso";
@@ -170,8 +178,9 @@ function Ingreso(descripcion, monto) {
 Ingreso.prototype = Object.create(Transaccion.prototype);
 Ingreso.prototype.constructor = Ingreso;
 
-// ── SUBCLASE: Egreso ─────────────────────────────────────────
+// SUBCLASE: EGRESO
 
+// Especializacion de Transaccion para representar egresos.
 function Egreso(descripcion, monto) {
   Transaccion.call(this, descripcion, monto);
   this.tipo = "egreso";
@@ -180,10 +189,12 @@ function Egreso(descripcion, monto) {
 Egreso.prototype = Object.create(Transaccion.prototype);
 Egreso.prototype.constructor = Egreso;
 
-// ── ARRAY GLOBAL DE TRANSACCIONES ───────────────────────────
+// ESTADO GLOBAL DE LA APLICACION
 
+// Estado central en memoria: aqui se guardan todas las transacciones registradas.
 var transacciones = [];
-// ── FUNCIONES DE CÁLCULO ─────────────────────────────────────
+
+// FUNCIONES DE CALCULO
 
 function obtenerMesAnio() {
   var meses = [
@@ -206,6 +217,7 @@ function obtenerMesAnio() {
   return "Presupuesto de " + mes + " " + anio;
 }
 
+// Suma unicamente los montos de las transacciones que son ingresos.
 function calcularTotalIngresos() {
   var total = 0;
   for (var i = 0; i < transacciones.length; i++) {
@@ -216,6 +228,7 @@ function calcularTotalIngresos() {
   return parseFloat(total.toFixed(2));
 }
 
+// Suma unicamente los montos de las transacciones que son egresos.
 function calcularTotalEgresos() {
   var total = 0;
   for (var i = 0; i < transacciones.length; i++) {
@@ -226,11 +239,13 @@ function calcularTotalEgresos() {
   return parseFloat(total.toFixed(2));
 }
 
+// Calcula el saldo disponible restando egresos al total de ingresos.
 function calcularPresupuesto() {
   var resultado = calcularTotalIngresos() - calcularTotalEgresos();
   return parseFloat(resultado.toFixed(2));
 }
 
+// Calcula que porcentaje del ingreso total ya fue utilizado en egresos.
 function calcularPorcentajeGastoGeneral() {
   var totalIngresos = calcularTotalIngresos();
   if (totalIngresos === 0) {
@@ -240,10 +255,11 @@ function calcularPorcentajeGastoGeneral() {
   return parseFloat(porcentaje.toFixed(2));
 }
 
+// Calcula el porcentaje individual de un egreso respecto al total de ingresos.
 function calcularPorcentajeEgresoIndividual(egreso) {
   if (!(egreso instanceof Egreso)) {
     console.error(
-      "calcularPorcentajeEgresoIndividual: el parámetro debe ser una instancia de Egreso.",
+      "calcularPorcentajeEgresoIndividual: el parametro debe ser una instancia de Egreso."
     );
     return parseFloat((0).toFixed(2));
   }
@@ -254,24 +270,26 @@ function calcularPorcentajeEgresoIndividual(egreso) {
   var porcentaje = (egreso.monto * 100) / totalIngresos;
   return parseFloat(porcentaje.toFixed(2));
 }
-// ── VALIDACIONES ──────────────────────────────────
 
+// VALIDACIONES
+
+// Validacion previa al registro desde la interfaz antes de crear la transaccion.
 function validarCamposTransaccion(tipo, descripcion, monto) {
   if (tipo !== "ingreso" && tipo !== "egreso") {
     return {
       valido: false,
-      mensaje: "Debe seleccionar un tipo de transacción: Ingreso o Egreso.",
+      mensaje: "Debe seleccionar un tipo de transaccion: Ingreso o Egreso.",
     };
   }
   if (typeof descripcion !== "string" || descripcion.trim() === "") {
-    return { valido: false, mensaje: "La descripción no puede estar vacía." };
+    return { valido: false, mensaje: "La descripcion no puede estar vacia." };
   }
   var montoNum = parseFloat(monto);
   if (isNaN(montoNum)) {
     return {
       valido: false,
       mensaje:
-        "El monto debe ser un número válido. No se permiten letras ni símbolos.",
+        "El monto debe ser un numero valido. No se permiten letras ni simbolos.",
     };
   }
   if (montoNum <= 0) {
